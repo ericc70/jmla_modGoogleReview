@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.0" client="site" method="upgrade">
+    <name>Google Reviews</name>
+    <author>Ericc70</author>
+    <version>0.1</version>
+    <description>Module pour afficher les avis Google.</description>
+    <files>
+        <filename module="mod_google_reviews">mod_google_reviews.php</filename>
+        <filename>tmpl/default.php</filename>
+    </files>
+   <config>
+    <fields name="params">
+        <fieldset name="basic">
+            <!-- Champ pour la clé API -->
+            <field name="api_key" type="text" default="" label="Clé API Google Places" description="Entrez votre clé API Google Places. Vous pouvez l'obtenir depuis Google Cloud Console." />
+            <!-- Champ pour l'ID du lieu Google -->
+            <field name="place_id" type="text" default="" label="Place ID" description="Entrez l'ID du lieu Google. Vous pouvez le trouver via Google Maps." />
+            <!-- Champ pour le nombre maximum d'avis -->
+            <field name="max_reviews" type="number" default="5" label="Nombre maximum d'avis" description="Nombre maximum d'avis à afficher (entre 1 et 10)." min="1" max="10" />
+        </fieldset>
+    </fields>
+</config>
+</extension>
