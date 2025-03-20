@@ -21,8 +21,14 @@ class GoogleReviewService implements ReviewService
     public function getReviews(array $config): array
     {
         $cacheId = md5(serialize($config));
+        $cacheEnabled = $config['cache_enabled'] ?? true;
+        $cacheTime = $config['cache_time'] ?? 3600;
 
         try {
+            if (!$cacheEnabled) {
+                return $this->fetchAndProcessReviews($config);
+            }
+
             return $this->cache->get(
                 function () use ($config) {
                     return $this->fetchAndProcessReviews($config);
@@ -30,7 +36,7 @@ class GoogleReviewService implements ReviewService
                 [],
                 $cacheId,
                 false,
-                3600
+                $cacheTime
             );
         } catch (\Exception $e) {
             return ['error' => $e->getMessage()];
