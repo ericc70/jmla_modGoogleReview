@@ -7,13 +7,11 @@ use Joomla\CMS\Cache\Controller\CallbackController;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Factory;
 
-class GoogleReviewService implements ReviewService
+class GoogleReviewService extends ErrorHandler implements ReviewService
 {
     private CallbackController $cache;
     private HttpFactory $httpFactory;
     private array $config;
-    private string $errorDisplay;
-    private string $logLevel;
 
     public function __construct(
         CacheControllerFactoryInterface $cacheFactory,
@@ -87,38 +85,5 @@ class GoogleReviewService implements ReviewService
         return array_slice($data['result']['reviews'], 0, $config['maxReviews'] ?? 5);
     }
 
-    private function decodeJson(string $json): array
-    {
-        try {
-            return json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            $this->logError('Erreur lors du décodage de la réponse JSON: ' . $e->getMessage(), 'error');
-            throw new \RuntimeException('Erreur lors du décodage de la réponse JSON: ' . $e->getMessage());
-        }
-    }
 
-    private function handleError(\Exception $e): array
-    {
-        $errorMessage = $e->getMessage();
-        
-        switch ($this->errorDisplay) {
-            case 'none':
-                return ['error' => ''];
-            case 'detailed':
-                return ['error' => $errorMessage];
-            case 'user_friendly':
-            default:
-                return ['error' => 'Une erreur est survenue lors de la récupération des avis.'];
-        }
-    }
-
-    private function logError(string $message, string $level): void
-    {
-        if ($this->logLevel === 'debug' || 
-            ($this->logLevel === 'warning' && in_array($level, ['warning', 'error'])) ||
-            ($this->logLevel === 'error' && $level === 'error')) {
-            
-            Log::add($message, constant('Joomla\\CMS\\Log\\Log::' . strtoupper($level)), 'mod_google_reviews');
-        }
-    }
 }
