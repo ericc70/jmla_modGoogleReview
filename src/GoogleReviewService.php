@@ -4,11 +4,16 @@ namespace Joomla\Module\GoogleReviews;
 use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Cache\Controller\CallbackController;
+use Joomla\CMS\Log\Log;
+use Joomla\CMS\Factory;
 
 class GoogleReviewService implements ReviewService
 {
     private CallbackController $cache;
     private HttpFactory $httpFactory;
+    private array $config;
+    private string $errorDisplay;
+    private string $logLevel;
 
     public function __construct(
         CacheControllerFactoryInterface $cacheFactory,
@@ -20,6 +25,10 @@ class GoogleReviewService implements ReviewService
 
     public function getReviews(array $config): array
     {
+        $this->config = $config;
+        $this->errorDisplay = $config['error_display'] ?? 'user_friendly';
+        $this->logLevel = $config['error_log_level'] ?? 'error';
+
         $cacheId = md5(serialize($config));
         $cacheEnabled = $config['cache_enabled'] ?? true;
         $cacheTime = $config['cache_time'] ?? 3600;
@@ -39,13 +48,14 @@ class GoogleReviewService implements ReviewService
                 $cacheTime
             );
         } catch (\Exception $e) {
-            return ['error' => $e->getMessage()];
+            return $this->handleError($e);
         }
     }
 
     private function fetchAndProcessReviews(array $config): array
     {
         if (empty($config['apiKey']) || empty($config['placeId'])) {
+            $this->logError('Clé API et/ou ID de lieu manquant', 'warning');
             throw new \InvalidArgumentException('Clé API et/ou ID de lieu requis');
         }
 
@@ -58,13 +68,16 @@ class GoogleReviewService implements ReviewService
         $response = $this->httpFactory->getHttp()->get($url);
 
         if ($response->code !== 200) {
+            $this->logError("Erreur HTTP: {$response->code}", 'error');
             throw new \RuntimeException("Erreur HTTP: {$response->code}");
         }
 
         $data = $this->decodeJson($response->body);
 
         if (isset($data['status']) && $data['status'] !== 'OK') {
-            throw new \RuntimeException('Erreur de l\'API Google: ' . ($data['error_message'] ?? 'Erreur inconnue'));
+            $errorMessage = $data['error_message'] ?? 'Erreur inconnue';
+            $this->logError('Erreur de l\'API Google: ' . $errorMessage, 'error');
+            throw new \RuntimeException('Erreur de l\'API Google: ' . $errorMessage);
         }
 
         if (!isset($data['result']['reviews'])) {
@@ -79,7 +92,33 @@ class GoogleReviewService implements ReviewService
         try {
             return json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
+            $this->logError('Erreur lors du décodage de la réponse JSON: ' . $e->getMessage(), 'error');
             throw new \RuntimeException('Erreur lors du décodage de la réponse JSON: ' . $e->getMessage());
+        }
+    }
+
+    private function handleError(\Exception $e): array
+    {
+        $errorMessage = $e->getMessage();
+        
+        switch ($this->errorDisplay) {
+            case 'none':
+                return ['error' => ''];
+            case 'detailed':
+                return ['error' => $errorMessage];
+            case 'user_friendly':
+            default:
+                return ['error' => 'Une erreur est survenue lors de la récupération des avis.'];
+        }
+    }
+
+    private function logError(string $message, string $level): void
+    {
+        if ($this->logLevel === 'debug' || 
+            ($this->logLevel === 'warning' && in_array($level, ['warning', 'error'])) ||
+            ($this->logLevel === 'error' && $level === 'error')) {
+            
+            Log::add($message, constant('Joomla\\CMS\\Log\\Log::' . strtoupper($level)), 'mod_google_reviews');
         }
     }
 }
