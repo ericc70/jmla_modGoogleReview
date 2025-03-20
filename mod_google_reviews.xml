@@ -2,22 +2,53 @@
 <extension type="module" version="3.0" client="site" method="upgrade">
     <name>Google Reviews</name>
     <author>Ericc70</author>
-    <version>0.1</version>
-    <description>Module pour afficher les avis Google.</description>
+    <version>0.2</version>
+    <description>Module pour afficher les avis Google avec gestion du cache et des erreurs.</description>
     <files>
         <filename module="mod_google_reviews">mod_google_reviews.php</filename>
         <filename>tmpl/default.php</filename>
+        <folder>src</folder>
     </files>
-   <config>
-    <fields name="params">
-        <fieldset name="basic">
-            <!-- Champ pour la clé API -->
-            <field name="api_key" type="text" default="" label="Clé API Google Places" description="Entrez votre clé API Google Places. Vous pouvez l'obtenir depuis Google Cloud Console." />
-            <!-- Champ pour l'ID du lieu Google -->
-            <field name="place_id" type="text" default="" label="Place ID" description="Entrez l'ID du lieu Google. Vous pouvez le trouver via Google Maps." />
-            <!-- Champ pour le nombre maximum d'avis -->
-            <field name="max_reviews" type="number" default="5" label="Nombre maximum d'avis" description="Nombre maximum d'avis à afficher (entre 1 et 10)." min="1" max="10" />
-        </fieldset>
-    </fields>
-</config>
+    <config>
+        <fields name="params">
+            <fieldset name="basic" label="Configuration de base">
+                <field name="api_key" type="text" default="" label="Clé API Google Places" description="Entrez votre clé API Google Places. Vous pouvez l'obtenir depuis Google Cloud Console." required="true" />
+                <field name="place_id" type="text" default="" label="Place ID" description="Entrez l'ID du lieu Google. Vous pouvez le trouver via Google Maps." required="true" />
+                <field name="max_reviews" type="number" default="5" label="Nombre maximum d'avis" description="Nombre maximum d'avis à afficher (entre 1 et 10)." min="1" max="10" />
+            </fieldset>
+
+            <fieldset name="cache" label="Configuration du cache">
+                <field name="cache_enabled" type="radio" default="1" label="Activer le cache" description="Activer ou désactiver le cache des avis." class="btn-group btn-group-yesno">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field name="cache_time" type="number" default="3600" label="Durée du cache (secondes)" description="Durée de conservation des avis en cache en secondes." min="300" />
+            </fieldset>
+
+            <fieldset name="error_handling" label="Gestion des erreurs">
+                <field name="error_display" type="list" default="user_friendly" label="Affichage des erreurs" description="Comment afficher les messages d'erreur aux utilisateurs.">
+                    <option value="none">Aucun message</option>
+                    <option value="user_friendly">Messages utilisateur</option>
+                    <option value="detailed">Messages détaillés</option>
+                </field>
+                <field name="error_log_level" type="list" default="error" label="Niveau de log" description="Niveau de journalisation des erreurs.">
+                    <option value="error">Erreurs uniquement</option>
+                    <option value="warning">Avertissements et erreurs</option>
+                    <option value="debug">Débogage complet</option>
+                </field>
+            </fieldset>
+
+            <fieldset name="display" label="Options d'affichage">
+                <field name="show_rating" type="radio" default="1" label="Afficher les étoiles" description="Afficher ou masquer les étoiles de notation." class="btn-group btn-group-yesno">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field name="show_date" type="radio" default="1" label="Afficher la date" description="Afficher ou masquer la date des avis." class="btn-group btn-group-yesno">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field name="date_format" type="text" default="d/m/Y" label="Format de date" description="Format de date PHP (ex: d/m/Y)" showon="show_date:1" />
+            </fieldset>
+        </fields>
+    </config>
 </extension>
