@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="module" client="site" method="upgrade">
+    <name>Google reviews</name>
+    <version>1.0.1</version>
+    <author>Ericc70</author>
+    <creationDate>today</creationDate>
+    <description>Afficher les avis google sur votre site via api (cache) </description>
+    <namespace path="src">Ericc70\Module\Googlereviews</namespace>
+    <files>
+        <folder module="mod_google_reviews">services</folder>
+        <folder>src</folder>
+        <folder>tmpl</folder>
+    </files>
+</extension>
