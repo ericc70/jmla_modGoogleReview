@@ -11,4 +11,53 @@
         <folder>src</folder>
         <folder>tmpl</folder>
     </files>
+    <config>
+        <fields name="params">
+            <fieldset name="basic" label="Configuration de base">
+                <field name="api_key" type="text" default="" label="Clé API Google Places" description="Entrez votre clé API Google Places. Vous pouvez l'obtenir depuis Google Cloud Console." required="true" />
+                <field name="place_id" type="text" default="" label="Place ID" description="Entrez l'ID du lieu Google. Vous pouvez le trouver via Google Maps." required="true" />
+                <field name="max_reviews" type="number" default="5" label="Nombre maximum d'avis" description="Nombre maximum d'avis à afficher (entre 1 et 10)." min="1" max="10" />
+            </fieldset>
+
+            <fieldset name="cache" label="Configuration du cache">
+                <field name="cache_enabled" type="radio" default="1" label="Activer le cache" description="Activer ou désactiver le cache des avis." class="btn-group btn-group-yesno">
+                    <option value="1">YES</option>
+                    <option value="0">NO</option>
+                </field>
+                <field name="cache_time" type="number" default="3600" label="Durée du cache (secondes)" description="Durée de conservation des avis en cache en secondes." min="300" />
+            </fieldset>
+
+            <fieldset name="test" label="Mode Test">
+                <field name="test_mode" type="radio" default="0" label="Activer le mode test" description="Utiliser des données de test au lieu de l'API Google Places." class="btn-group btn-group-yesno">
+                    <option value="1">YES</option>
+                    <option value="0">NO</option>
+                </field>
+            </fieldset>
+
+            <fieldset name="error_handling" label="Gestion des erreurs">
+                <field name="error_display" type="list" default="user_friendly" label="Affichage des erreurs" description="Comment afficher les messages d'erreur aux utilisateurs.">
+                    <option value="none">Aucun message</option>
+                    <option value="user_friendly">Messages utilisateur</option>
+                    <option value="detailed">Messages détaillés</option>
+                </field>
+                <field name="error_log_level" type="list" default="error" label="Niveau de log" description="Niveau de journalisation des erreurs.">
+                    <option value="error">Erreurs uniquement</option>
+                    <option value="warning">Avertissements et erreurs</option>
+                    <option value="debug">Débogage complet</option>
+                </field>
+            </fieldset>
+
+            <fieldset name="display" label="Options d'affichage">
+                <field name="show_rating" type="radio" default="1" label="Afficher les étoiles" description="Afficher ou masquer les étoiles de notation." class="btn-group btn-group-yesno">
+                    <option value="1">YES</option>
+                    <option value="0">NO</option>
+                </field>
+                <field name="show_date" type="radio" default="1" label="Afficher la date" description="Afficher ou masquer la date des avis." class="btn-group btn-group-yesno">
+                    <option value="1">YES</option>
+                    <option value="0">NO</option>
+                </field>
+                <field name="date_format" type="text" default="d/m/Y" label="Format de date" description="Format de date PHP (ex: d/m/Y)" showon="show_date:1" />
+            </fieldset>
+        </fields>
+    </config>
 </extension>
