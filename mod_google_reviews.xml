@@ -9,8 +9,14 @@
     <files>
         <folder module="mod_google_reviews">services</folder>
         <folder>src</folder>
-        <folder>tmpl</folder>
-    </files>
+        <folder>tmpl</folder>  
+    </files> 
+
+    <media destination="mod_google_reviews" folder="media">
+        <filename>joomla.asset.json</filename>
+        <folder>css</folder>
+    </media>
+
     <config>
         <fields name="params">
             <fieldset name="basic" label="Configuration de base">

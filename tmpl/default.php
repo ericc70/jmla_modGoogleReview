@@ -1,6 +1,18 @@
-<?php
-\defined('_JEXEC') or die;
 
+<?php
+
+use Joomla\CMS\Uri\Uri;
+
+\defined('_JEXEC') or die;
+$document = $app->getDocument();
+$wa = $document->getWebAssetManager();
+$moduleBasePath = Uri::base() . 'modules/mod_google_reviews/media/';
+$wa->registerAndUseStyle('mod_google_reviews', $moduleBasePath . 'css/default.css');
+// $wa->getRegistry()->addExtensionRegistryFile('mod_google_reviews');
+
+// $wa->useStyle('mod_google_reviews.default');
+
+// Load the CSS file
 
 if (!empty($reviews)): 
 
