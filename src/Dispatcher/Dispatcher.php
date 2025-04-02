@@ -11,7 +11,8 @@ class Dispatcher implements DispatcherInterface
 {
     public function dispatch()
     {
-        $hello = GooglereviewsHelper::getReviews('hello');
+      $helper = new GooglereviewsHelper();
+      $hello = $helper->getReviews('');
 
         require ModuleHelper::getLayoutPath('mod_google_reviews');
     }

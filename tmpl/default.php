@@ -3,4 +3,4 @@ defined('_JEXEC') or die;
 
 ?>
 
-<h4><?php echo $hello; ?></h4>
+<h4><?php var_dump( $hello); ?></h4>
