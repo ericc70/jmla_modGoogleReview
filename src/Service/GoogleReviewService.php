@@ -56,7 +56,7 @@ class GoogleReviewService extends ErrorHandler implements ReviewService
     private function fetchAndProcessReviews(array $config): array
     {
         var_dump($config);
-        if ($config['test_mode'] == true) {
+        if ($config['test_mode'] == 0) {
             return $this->getTestReviews($config);
         }
 
