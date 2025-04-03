@@ -6,8 +6,7 @@ use Ericc70\Module\Googlereviews\Site\Service\ReviewService;
 use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Cache\Controller\CallbackController;
-use Joomla\CMS\Log\Log;
-use Joomla\CMS\Factory;
+
 
 class GoogleReviewService extends ErrorHandler implements ReviewService
 {

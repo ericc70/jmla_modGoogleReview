@@ -7,7 +7,6 @@ use Ericc70\Module\Googlereviews\Site\Helper\GooglereviewsHelper;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Dispatcher\DispatcherInterface;
 use Joomla\CMS\Helper\ModuleHelper;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Registry\Registry;
 use Joomla\Input\Input;
 
